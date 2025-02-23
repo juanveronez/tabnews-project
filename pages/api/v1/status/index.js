@@ -1,9 +1,31 @@
 import { query } from "infra/database";
 
 async function status(_, response) {
-  const result = await query("SELECT 1 + 1 AS sum;");
-  console.log(result.rows);
-  response.status(200).json({ mensagem: "A aplicação parece saudável!" });
+  const updatedAt = new Date().toISOString();
+
+  const versionResult = await query("SHOW server_version;");
+  const version = versionResult.rows[0].server_version;
+
+  const maxConnectionsResult = await query("SHOW max_connections;");
+  const maxConnections = parseInt(maxConnectionsResult.rows[0].max_connections);
+
+  const openedConnectionsResult = await query(
+    "SELECT COUNT(*)::INT FROM pg_stat_activity WHERE datname = $1;",
+    [process.env.POSTGRES_DB],
+  );
+  const openedConnections = openedConnectionsResult.rows[0].count;
+  console.log(openedConnections);
+
+  response.status(200).json({
+    updated_at: updatedAt,
+    dependencies: {
+      database: {
+        version,
+        max_connections: maxConnections,
+        opened_connections: openedConnections,
+      },
+    },
+  });
 }
 
 export default status;
