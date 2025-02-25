@@ -1,6 +1,6 @@
 import { query } from "infra/database";
 
-async function status(_, response) {
+export default async function status(_, response) {
   const updatedAt = new Date().toISOString();
 
   const versionResult = await query("SHOW server_version;");
@@ -14,7 +14,6 @@ async function status(_, response) {
     [process.env.POSTGRES_DB],
   );
   const openedConnections = openedConnectionsResult.rows[0].count;
-  console.log(openedConnections);
 
   response.status(200).json({
     updated_at: updatedAt,
@@ -27,5 +26,3 @@ async function status(_, response) {
     },
   });
 }
-
-export default status;
