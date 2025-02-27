@@ -79,3 +79,15 @@ Como já falado, o IP de uma aplicação pode mudar caso a mesma seja alterada e
 - 3. Os gTTLs `.dev` é acionado, sendo feita uma request para um de seus servidores, _caso tiver o DNS Record em cache retorna diretamente_, caso contrário passa o IP do Authoritative Server que tem esse domínio.
 - 4. O Authoritative Server retorna o DNS Register, sendo que durante toda a comunicação vai atualizando o cache de cada uma das camadas
 - 5. Só então, já com o IP "em mãos" o computador vai se comunicar pela internet até chegar no IP final.
+
+## Comand Line
+
+### cURL and Relateds
+
+Quando usamos o cURL temos um client HTTP que pode fazer requests diretamente contra um endpoint, usando o modelo `curl https://tabnews-project-mocha.vercel.app/api/v1/status` por exemplo.
+
+Quando queremos mudar o **Method** do cURL podemos usar a flag `-X DELETE` por exemplo para usar o method DELETE. Dessa forma a URL seria: `curl -X DELETE https://tabnews-project-mocha.vercel.app/api/v1/status`
+
+O curl pode ser usado junto com um pipe, que é pegarmos o retorno de seu endpoint e jogar dentro de outro método da linha de comando. Um exemplo disso seria usar o comando `jq` para melhorar a visualização de um retorno JSON. Porém isso trás informações sobre a execução do curl, então para silenciar essas informações usamos o comando `-s` (para ativar o _silence mode_) Dessa forma o comando seria por exemplo: `curl -s https://tabnews-project-mocha.vercel.app/api/v1/status | jq`.
+
+Por fim, caso quisermos fazer com que o endpoint seja consultado com um intervalo de tempo, **sendo consultado a cada segundo por exemplo**, podemos usar o comando `watch`, esse comando por padrão roda a cada 2 secs mas pode ser configurado passando o numero de segundos pela flag `-n`. Depois disso passamos o comando que queremos que seja executado em aspas simples, como aqui: `watch -n 1 'curl -s -X GET https://tabnews-project-mocha.vercel.app/api/v1/status | jq'`.
