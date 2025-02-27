@@ -16,6 +16,8 @@ Sendo que é comum termos multiplos protocolos trabalhando juntos, por exemplo H
 
 ## Funcionamento do Git (Git Deep Dive)
 
+### Commits
+
 O Git é um formato de versionamento descentralizado, isso significa que não temos um repositório central, mas sim multiplos repositórios que podem funcionar de forma independente.
 Além disso, quando lidamos com o Git cada versão é uma "foto" do momento atual do projeto, sendo que essa foto registra todos os arquivos presentes no projeto naquele momento e salva cada arquivo em um Blob.
 
@@ -28,6 +30,14 @@ Sendo assim existe uma árvore de referências a arquivos blob que só atualiza 
 Já as diffs entre versões do Git são geradas "on demand", ou seja, só é feito o diff quando queremos comparar duas versão diretamente e esse cálculo é feito naquele momento, não sendo armazenado no git essa diferença como em outros padrões.
 
 Além disso, o Git segue um formado de Gráfo Acíclico Direcional (DAG).
+
+### Branchs
+
+Uma branch no git nada mais é do que um arquivo de texto que tem um apontamento para um commit expecífico na "linha do tempo dos commits", sendo que podemos ter múltiplos apontamentos para mesmas branchs ou branchs diferentes, já que a única coisa que realmente é criada é um arquivo de texto simples com o commit que está sendo referenciado.
+
+Já o `HEAD` do git é a referência do que está sendo mostrado atualmente no projeto, então é outro apontamento que pode acontecer diretamente ao hash de um commit ou ao nome da branch. Sendo assim é apenas outro apontamento.
+
+Sendo assim podemos entender o `HEAD` como o apontamento principal do projeto e podemos entender que uma branch é um ALIAS para um commit ou linha de commits. Sendo que quando estamos em uma branch e um novo commit é feito o apontamento da branch é atualizado.
 
 ## DNS
 
