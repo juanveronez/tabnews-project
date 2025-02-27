@@ -91,3 +91,33 @@ Quando queremos mudar o **Method** do cURL podemos usar a flag `-X DELETE` por e
 O curl pode ser usado junto com um pipe, que é pegarmos o retorno de seu endpoint e jogar dentro de outro método da linha de comando. Um exemplo disso seria usar o comando `jq` para melhorar a visualização de um retorno JSON. Porém isso trás informações sobre a execução do curl, então para silenciar essas informações usamos o comando `-s` (para ativar o _silence mode_) Dessa forma o comando seria por exemplo: `curl -s https://tabnews-project-mocha.vercel.app/api/v1/status | jq`.
 
 Por fim, caso quisermos fazer com que o endpoint seja consultado com um intervalo de tempo, **sendo consultado a cada segundo por exemplo**, podemos usar o comando `watch`, esse comando por padrão roda a cada 2 secs mas pode ser configurado passando o numero de segundos pela flag `-n`. Depois disso passamos o comando que queremos que seja executado em aspas simples, como aqui: `watch -n 1 'curl -s -X GET https://tabnews-project-mocha.vercel.app/api/v1/status | jq'`.
+
+## Development Strategies
+
+### Trunk-Based Development
+
+Nessa estratégia temos uma branch principal que faz o processo de CI/CD e tudo é desenvolvido e integrado diretamente nessa branch. Sendo que para que esse desenvolvimento não quebre nada é usado estratégias como `Feature Flag` e `Abstractions`. Os prós dessa estrategia são uma maior velocidade e um sync maior entre o que cada desenvolvedor faz e seu Trunk, sendo assim temos maior velocidade. Porém isso exige maior maturidade, uma cultura orientada a esse tipo de desenvolvimento e uma qualidade grande nos testes que são gerados em cada desenvolvimento, para que nenhuma feature nova impacte o sistema o que já existe no sistema.
+
+#### Feature Flag
+
+É uma estratégia em que uma feature nova só é visível para um desenvolvedor ou o grupo que está trabalhando nela, sendo assim essa feature existe no código, mas ela ainda não é aplicável ou tem impacto em outras partes do sistema. Além disso essa abordagem pode fazer com que outras pessoas possam pedir para terem essa feature flag e participarem do processo de uso ou teste da feature.
+
+#### Abstractions
+
+Esse processo quase sempre é somado com a criação de abstrações, então uma vez que uma feature que já funciona precisa ser alterada o que fazemos é criar uma abstração na frente da feature, fazer os apontamentos e usos da feature antiga pela abstração que ainda aponta para a versão antiga. Depois começa o processo de desenvolvimento da nova versão da feature, para que então o apontamento da abstração seja substituído e até mesmo a abstração possa ser removida.
+
+#### Abstractions + Feature Flag
+
+Uma vez que as abstrações criam essa separação entre o uso da feature antiga e nova é possível usar as duas abordagens somadas, sendo assim uma feature flag controla se a abstração vai retornar a feature antiga ou a feature nova.
+
+### Feature Branch
+
+Abordagem também conhecida como GitHub flow, nessa abordagem temos uma linha principal e vamos criando ramificações para desenvolvimento de features, sendo que essas branchs precisam ter vida curta e precisam passar por um processo de integração com o ramo principal.
+
+Essa estratégia também cria a possibilidade de termos uma branch de release por exemplo, que é responsável por conter o que verdadeiramente está em produção, para dessa forma termos uma separação do que está como código principal, features sendo feitas e o código em produção.
+
+Porém como essa estratégia cria uma barreira maior pode tornar o processo mais lento e mais burocrático, causando demora no momento de integrar todas as entregas.
+
+### Git Flow
+
+Processo mais lento e burocrático de todos, só incentivado quando temos que dar manutenção a versões diferentes de um mesmo software. Em casos como aplicativos e sites isso não se faz necessário.
