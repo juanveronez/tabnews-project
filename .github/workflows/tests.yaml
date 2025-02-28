@@ -1,0 +1,17 @@
+name: Automated Tests
+on: pull_request
+jobs:
+  jest:
+    name: Jest Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # used to get project code
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      # use this because download deps based on package-lock, than the entire deps tree will be the same, something that shouldn't be true using npm i, because this one update package-lock while download deps using package file
+      - run: npm ci
+
+      - run: npm test
