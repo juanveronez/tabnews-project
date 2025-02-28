@@ -1,10 +1,14 @@
 import { query } from "infra/database";
+import { waitForAllServices } from "tests/orquestrator";
 
 async function cleanDatabase() {
   await query("DROP SCHEMA public CASCADE; CREATE SCHEMA public");
 }
 
-beforeAll(cleanDatabase);
+beforeAll(async () => {
+  await waitForAllServices();
+  await cleanDatabase();
+});
 
 test("POST to /api/v1/migrations should return 200", async () => {
   const response1 = await fetch("http://localhost:3000/api/v1/migrations", {
