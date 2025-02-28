@@ -9,7 +9,7 @@ export async function waitForAllServices() {
       maxTimeout: 1000, // This add timeout was used to don't allow async-retry to scale timeout, by default is an exp.
     });
 
-    async function fetchStatusPage(bail, tryNumber) {
+    async function fetchStatusPage() {
       const response = await fetch("http://localhost:3000/api/v1/status");
 
       // response.ok: status between 200-299
