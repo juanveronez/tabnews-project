@@ -121,3 +121,35 @@ Porém como essa estratégia cria uma barreira maior pode tornar o processo mais
 ### Git Flow
 
 Processo mais lento e burocrático de todos, só incentivado quando temos que dar manutenção a versões diferentes de um mesmo software. Em casos como aplicativos e sites isso não se faz necessário.
+
+## Development with Tests
+
+Quando desenvolvemos sistemas orientados a testes temos que entendender qual o papel dos testes e o que eles representam no sistema. Se os testes forem escritos por alguém técnico podemos ter um teste sendo algo muito formal sobre a lógica usada. Por outro lado se for feito por alguém de negócio podemos ter o comportamento esperado, mas descasando da implementação feita.
+
+Mas para esse projeto tentaremos achar o caminho do meio.
+
+### TDD (Test Driven Development)
+
+O TDD é uma forma muito usada para escrita de testes e desenvolvimento, nesse formato primeiro escrevemos os testes e depois fazemos o desenvolvimento com base no que foi escrito em cada teste. Porém por conta da natureza técnica desse formato acabamos tendo afirmações muito técnicas sobre o que está ocorrendo e que podem não ser tão precisas sobre o comportamento real.
+
+Além disso, como a escrita do teste independe do assert que está sendo feito pelo teste podemos ter casos em que um teste é alterado sem mudar seu contexto, dessa forma descasando o desenvolvimento do teste e sua descrição.
+
+### BDD (Behavior Driven Development)
+
+Nesse formato temos os testes sendo muito mais focados em documentações de negócio, são excelentes para contexto, porém trazem uma verbosidade e uma complexidade no foramto, além disso trazem tanto afirmações de comportamento como de cenários esperados.
+
+#### Gherkin
+
+Temos executores de testes especializados na leitura de testes escritos no formato **Gherkin**, como o **Cucumber**
+
+Usa termos claros sobre o comportamento do sistema, criando assim um formato que seja claro para pessoas técnicas e não técnicas. `Given.....When....Then`, como no exemplo:
+
+```md
+`Given` the user is not logged in
+`When` the user make a POST to /migrations endpoint
+`Then` the migration should be executed successfully
+```
+
+### Tests por Contexto + Afirmação
+
+Nesse formato usamos o `describe` e o `test` (ou `it`) apenas para trazer um contexto do escopo que está sendo testado para que quem leia os testes possa se orientar, mas a afirmação de como o sistema se comporta não fica no título do teste e no seu tesste (lógico), mas sim apenas no seu `assert`. Dessa forma simplificamos e padronizamos a escrita do teste, além disso em caso de manutenção no assert o texto não precisa ser alterado, diminuindo riscos de manutenção.
