@@ -1,5 +1,7 @@
 import retry from "async-retry";
 
+import { query } from "infra/database";
+
 export async function waitForAllServices() {
   await waitForWebServer();
 
@@ -18,4 +20,8 @@ export async function waitForAllServices() {
       }
     }
   }
+}
+
+export async function clearDatabase() {
+  await query("DROP SCHEMA public CASCADE; CREATE SCHEMA public");
 }
