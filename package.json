@@ -19,7 +19,8 @@
     "lint:prettier:fix": "prettier --write .",
     "lint:eslint:check": "next lint --dir .",
     "prepare": "husky",
-    "commit": "cz"
+    "commit": "cz",
+    "check:dependencies": "npx npm-check-updates -i"
   },
   "author": "Juan Veronez (juan.monteirov@gmail.com)",
   "license": "MIT",
