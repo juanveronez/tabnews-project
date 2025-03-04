@@ -1,13 +1,8 @@
-import { query } from "infra/database";
-import { waitForAllServices } from "tests/orquestrator";
-
-async function cleanDatabase() {
-  await query("DROP SCHEMA public CASCADE; CREATE SCHEMA public");
-}
+import { clearDatabase, waitForAllServices } from "tests/orquestrator";
 
 beforeAll(async () => {
   await waitForAllServices();
-  await cleanDatabase();
+  await clearDatabase();
 });
 
 describe("GET /api/v1/migrations", () => {
