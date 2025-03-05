@@ -39,7 +39,7 @@ function Dependencies() {
   });
 
   if (isLoading) {
-    return undefined;
+    return <h2>Loading dependencies...</h2>;
   }
 
   return (
