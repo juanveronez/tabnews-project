@@ -41,3 +41,9 @@ function getSSL() {
   }
   return process.env.NODE_ENV === "production";
 }
+
+const database = {
+  query,
+};
+
+export default database;
