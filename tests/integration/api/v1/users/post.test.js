@@ -78,7 +78,7 @@ describe("POST /api/v1/users", () => {
         status_code: 400,
       });
     });
-    test("With duplicated 'username'", async () => {
+    test("With duplicated case insensitive 'username'", async () => {
       const response1 = await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
         headers: {
