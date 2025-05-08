@@ -80,6 +80,36 @@ Como já falado, o IP de uma aplicação pode mudar caso a mesma seja alterada e
 - 4. O Authoritative Server retorna o DNS Register, sendo que durante toda a comunicação vai atualizando o cache de cada uma das camadas
 - 5. Só então, já com o IP "em mãos" o computador vai se comunicar pela internet até chegar no IP final.
 
+## Versionamento e Atualização de Dependências
+
+Quando olhamos uma dependência ela tem uma estrutura nesse formato:
+
+[x].[y].[z]
+
+x -> representa uma versão MAJOR, ou seja, algo maior que possivelmente terá breaking changes
+y -> versão MINOR, representa uma mudança no pacote, mas que provavelmente não conta com breaking changes
+z -> PATCH, uma versão de correção que não deve ter impácto prático, apenas correções ou atualizações não funcionais (em teoria).
+
+## Dependências e uso do ~, ^ ou nada
+
+Quando olhamos um arquivo de dependências eles podem ter deps com diferentes símbulos, como **^**, **~** ou nenhum.
+
+"~1.4.12" -> o **~** representa que qualquer versão **patch** acima da 12 é permitida, ou seja, a versão 1.4.20 (por exemplo) pode ser instalada
+
+"^1.4.12" -> já o uso do **^** representa que versões **minor** podem ser instaladas, ou seja, a versão 1.5.2 poderia ser instalada nesse caso
+
+"1.4.12" -> neste último caso apenas a versão definida será instalada, zero flexibilidade por aqui!
+
+Ou seja, podemos controlar o nível de flexibilidade na versão da dependência seguindo esse padrão, sendo assim um tradeoff de flexibilidade x controle.
+
+## Análise de dependências 
+
+Podemos usar a lib `npm-check-updates` para fazer a análise de updates no projeto.
+
+Importante notar que esse método não atua verificando segurança das libs (como o npm audit), porém é útil na atualização de versões.
+
+Para usar essa lib é utilizado o comando `npx npm-check-updates`
+
 ## Comand Line
 
 ### cURL and Relateds
