@@ -183,3 +183,60 @@ Usa termos claros sobre o comportamento do sistema, criando assim um formato que
 ### Tests por Contexto + Afirmação
 
 Nesse formato usamos o `describe` e o `test` (ou `it`) apenas para trazer um contexto do escopo que está sendo testado para que quem leia os testes possa se orientar, mas a afirmação de como o sistema se comporta não fica no título do teste e no seu tesste (lógico), mas sim apenas no seu `assert`. Dessa forma simplificamos e padronizamos a escrita do teste, além disso em caso de manutenção no assert o texto não precisa ser alterado, diminuindo riscos de manutenção.
+
+## Autenticação
+
+Primeira questão, qualquer tecnologia tem problemas de segurança, então é mais uma questão de quanto tempo e esforço é necessário para conseguir encontrar e abusar dessas brechas.
+
+Já existem bibliotecas e tecnologias validadas que atuam para utilizarmos na camada de autenticação, porém a ideia aqui é entender os principais formatos de autenticação e suas características.
+
+### Texto puro (plain text)
+
+É uma forma simples, porém **nada segura**, nesse formato salvamos a senha da mesma forma que o usuário inseriu. Sendo assim não faz nenhum sentido usar essa abordagem
+
+### Encriptação
+
+Nessa etapa a senha não é mais salva diretamente, passamos por um processo de encriptação, que é quando transformamos o texto antigo em algo novo. Para isso são usadas cifras, como a cifra de Cesar, ou ainda uma **chave mestra**.
+
+Porém essa opção também oferece riscos, uma vez que toda a informação da senha permanece no texto original, além disso uma vez que sabemos a cifra ou chave mestra temos acesso a todas as senhas de uma vez.
+
+Então mesmo sendo uma opção melhor, ainda não é uma opção segura.
+
+###  Hash
+
+Primeiro, é importante entender que um hash não serve para compactar as informações, ele utiliza informações como base para criar o hash e essas informações são "destruidas" no processo de criação do Hash. 
+
+Sendo que podemos entender que a transformação de um hash é uma **one-way function**, ou seja uma função em que a informação só vai em uma direção. Por outro lado a encriptação é uma **two-way function**, sendo assim a informação pode ser encriptada e desencriptada. Desta forma uma vez que um hash é criado nós nunca mais conseguimos transformar a informação no valor original.
+
+Sendo que esses hashs são determinísticos, ou seja dada a uma mesma entrada sempre teremos uma mesma saída. Por isso que quando vamos recuperar uma senha e digitamos a mesma senha o sistema consegue determinar se essa senha era igual a anterior. Isso acontece pois mesmo com a transformação da senha, como é algo determinístico, podemos comparar o hash gerado com o hash antigo, e se ambos forem iguais podemos determinar que as senhas são iguais, **ou pelo menos na teoria**.
+
+Essa questão teórica sobre as senhas serem iguais é importante, pois mostra que para que o hash realmente seja seguro precisamos de um algoritmo que evite colições, pois uma vez que senhas colidam um agente mal intencionado pode criar uma senha falsa e colidir com o hash da senha real.
+
+Para isso já tivemos vários algoritmos: **MD5**, **SHA-1** e hoje temos o **SHA-256**. Porém é importante notar que esses algoritmos podem ser quebrados em algum momento e que essas tecnologias evoluem. 
+
+Mas o problema de segurança aqui é outro, os Hashs são realmente mais seguros e continuam evoluindo, porém não impedem que o usuário crie uma senha que seja fraca, como 123456 e se torne um alvo. Hoje existem **Rainbow tables**, que são tabelas pré-computadas com hashs já quebrados ou já conhecidos por Hackers, que normalmente tem senhas comuns que já foram usadas por outros usuários.
+
+Então a questão de segurança agora é garantir que mesmo um usuário que coloque a senha 123456 esteja mais seguro, e para isso temos algumas opções novas.
+
+### Hash + Salt
+
+A coluna salt é uma coluna concreta, que vai realmente existir na tabela do banco de dados (ou pelo menos a informação vai existir no banco) e que é unica pra cada usuário.
+
+Falei que a informação vai existir, pois existem estratégias como do BCrypt que faz esse hashing com salt concatenando todas as informações, além de adicionar uma camada extra de segurança!
+
+Essa camada extra de seguranda são os **Rounds** (ou Cost Factor), esse valor determina o número de vezes que um hash será re-imbaralhado. Sendo que esse valor escala de forma exponencial no tempo, então quanto maior o valor de rounds mais demorado para gerar o Hash. Agora, por que isso é bom? Quanto maior o Rounds mais complexa a senha e mais difícil de ser quebrada, além disso em um adaque de milhares de milhares de tentativa quanto mais complexo um mesmo hash for mais tempo para que um único valor ser testado.
+
+Estrutura: `$<versao>$<rounds>$<salt>+<senha>`
+Exemplo real: `$2a$14$iljTnCmwUONpdNOUevXFtuDCVPa0l2hiYoT61JTLqhEus21DfgFZG`
+
+Dessa forma essa é uma estratégia muito mais segura e robusta, ajudando a mitigar muitos ataques, porém mesmo assim existe um plus
+
+### Hash + Salt + Pepper
+
+O Pepper é um texto randomico, que vai ser único e que deve ser o mais aleatório possível. Porém o importante aqui é que **esse valor não deve ser salvo no banco de dados**, sendo um valor que deve ser escondido.
+
+Essa questão do pepper não ser salvo no banco garante que caso um ataque no banco tenha sucesso as senhas mesmo assim não seram comprometidas.
+
+Da mesma forma essa combinação de Hash + Salt + Pepper irá usar uma solução como o Bcrypt, porém concatenando o pepper no começo ou final da senha no processo de formação do hash.
+
+A parte desse valor ser escondido é importante para evitar vazamentos, então o ideal é que esse pepper seja, por exemplo, uma variável de ambiente, dessa forma garantindo que tudo esteja o mais protegido possível.
