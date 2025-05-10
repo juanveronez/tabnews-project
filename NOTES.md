@@ -102,7 +102,7 @@ Quando olhamos um arquivo de dependências eles podem ter deps com diferentes s�
 
 Ou seja, podemos controlar o nível de flexibilidade na versão da dependência seguindo esse padrão, sendo assim um tradeoff de flexibilidade x controle.
 
-## Análise de dependências 
+## Análise de dependências
 
 Podemos usar a lib `npm-check-updates` para fazer a análise de updates no projeto.
 
@@ -202,9 +202,9 @@ Porém essa opção também oferece riscos, uma vez que toda a informação da s
 
 Então mesmo sendo uma opção melhor, ainda não é uma opção segura.
 
-###  Hash
+### Hash
 
-Primeiro, é importante entender que um hash não serve para compactar as informações, ele utiliza informações como base para criar o hash e essas informações são "destruidas" no processo de criação do Hash. 
+Primeiro, é importante entender que um hash não serve para compactar as informações, ele utiliza informações como base para criar o hash e essas informações são "destruidas" no processo de criação do Hash.
 
 Sendo que podemos entender que a transformação de um hash é uma **one-way function**, ou seja uma função em que a informação só vai em uma direção. Por outro lado a encriptação é uma **two-way function**, sendo assim a informação pode ser encriptada e desencriptada. Desta forma uma vez que um hash é criado nós nunca mais conseguimos transformar a informação no valor original.
 
@@ -212,7 +212,7 @@ Sendo que esses hashs são determinísticos, ou seja dada a uma mesma entrada se
 
 Essa questão teórica sobre as senhas serem iguais é importante, pois mostra que para que o hash realmente seja seguro precisamos de um algoritmo que evite colições, pois uma vez que senhas colidam um agente mal intencionado pode criar uma senha falsa e colidir com o hash da senha real.
 
-Para isso já tivemos vários algoritmos: **MD5**, **SHA-1** e hoje temos o **SHA-256**. Porém é importante notar que esses algoritmos podem ser quebrados em algum momento e que essas tecnologias evoluem. 
+Para isso já tivemos vários algoritmos: **MD5**, **SHA-1** e hoje temos o **SHA-256**. Porém é importante notar que esses algoritmos podem ser quebrados em algum momento e que essas tecnologias evoluem.
 
 Mas o problema de segurança aqui é outro, os Hashs são realmente mais seguros e continuam evoluindo, porém não impedem que o usuário crie uma senha que seja fraca, como 123456 e se torne um alvo. Hoje existem **Rainbow tables**, que são tabelas pré-computadas com hashs já quebrados ou já conhecidos por Hackers, que normalmente tem senhas comuns que já foram usadas por outros usuários.
 
